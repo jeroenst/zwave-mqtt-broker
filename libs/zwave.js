@@ -45,28 +45,14 @@ function onNodeAdded(id) {
 }
 
 function onEvent(id, value) {
-  _mqttPublish(constants.commandClass[32], id, constants.commandClass[32], value, 'Event')
+  _mqttPublish(_returnCommandClassString(32), id, _returnCommandClassString(32), value, 'Event')
 }
 
 function onValueAdded(id, comClass, value) {
   if (!nodes[id].classes[comClass]) { nodes[id].classes[comClass] = {}; }
   nodes[id].classes[comClass][value.index] = value;
 
-  _mqttPublish(constants.comclass[comclass], id, value.label, value.value, 'value added/changed');
-}
-
-function _mqttPublish(topic, id, label, value, action){
-  var message = JSON.stringify({
-    source: 'zwave[' + id + ']',
-    label: label,
-    value: value,
-    action: action,
-    timestamp: Date.now()
-  });
-
-  mqtt.then(function(client){
-    client.publish(topic, message);
-  });
+  _mqttPublish(_returnCommandClassString(comClass), id, value.label, value.value, 'value added/changed');
 }
 
 function onValueChanged(id, comClass, value) {
@@ -145,10 +131,22 @@ function _disconnect() {
   process.exit();
 }
 
-function _zwavePublish(command, message) {
-  mqtt.then(function(client){
-    client.publish(command, message);
+function _mqttPublish(topic, id, label, value, action){
+  var message = JSON.stringify({
+    source: 'zwave[' + id + ']',
+    label: label,
+    value: value,
+    action: action,
+    timestamp: Date.now()
   });
+
+  mqtt.then(function(client){
+    client.publish(topic, message);
+  });
+}
+
+function _returnCommandClassString(id) {
+  return constants.commandClass[id] || 'unknown';
 }
 
 function _zwaveLog(event, logLevel) {
