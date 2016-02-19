@@ -31,3 +31,16 @@ $ ./pm2.sh
 $ pm2 startup
 $ pm2 save
 ```
+
+
+
+## Installing open-zwave library
+https://github.com/OpenZWave/open-zwave
+
+https://github.com/OpenZWave/open-zwave/releases
+
+### OSX
+
+1. Download the most recent [release](https://github.com/OpenZWave/open-zwave/releases) and unzip.
+2. `cd` to the unzipped directory and run `make`
+3. If make succeeds, run `sudo make install`

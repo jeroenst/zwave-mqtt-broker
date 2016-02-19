@@ -1,35 +1,32 @@
-/**
- * DomoGeeek v1.0
- * https://github.com/ltoinel/domogeeek
- *
- * Copyright 2014 ZWave2MQTT
- * Released under the Apache License 2.0 (Apache-2.0)
- * 
- * @desc: Configuration file for the ZwaveBus
- * @author: ltoinel@free.fr
- */
-
 var config = {};
 
 //Debug
 config.debug = true;
 
 // MQTT Message Broker 
-config.mqtt = {};
-config.mqtt.uri = "mqtt://192.168.1.2";
-config.mqtt.options = {
-//username: 'AnUser',
-//password: 'APassword',
-keepalive: 20,
-clean: true,
-clientId: 'zwave2mqtt'
+config.mqtt = {
+  uri: 'mqtt:172.0.0.1',
+  options: {
+    //username: 'AnUser',
+    //password: 'APassword',
+    keepalive: 20,
+    clean: true,
+    clientId: 'zwave2mqtt'
+  }
 };
 
-// Zwavebus
-config.saveconfig = false;
-config.logging =  false;
-config.consoleoutput = true;
-config.suppressrefresh = false;
-config.device = '/dev/ttyZwaveStick';
+// https://github.com/OpenZWave/open-zwave/wiki/Config-Options
+config.zwave = {
+  Logging: true, //Enable Logging in the Library or not.
+  EnableSIS: true, //Automatically become a SUC if there is No SUC on the network
+  ConsoleOutput: true, //Enable log output to stdout (or console)
+  SaveConfiguration: true, //When Shutting Down, should the library automatically save the Network Configuration in zwcfg_.xml_
+}
+
+// for linux/mac
+config.zwaveBus = '/dev/ttyUSB0';
+
+// for windows
+// config.zwaveBus = '\\\\.\\COM3';
 
 module.exports = config;
