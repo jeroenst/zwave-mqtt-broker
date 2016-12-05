@@ -7,30 +7,30 @@ var zwaveHandler = require('./libs/zwave')(mqtt);
 var zwave = new openzwave(config.zwave);
 
 var zwaveEvents = {
-  'event':'onEvent',
-  'driver ready':'onDriverReady',
-  'driver failed':'onDriverFailed',
-  'node added':'onNodeAdded',
-  'value added':'onValueAdded',
-  'value changed':'onValueChanged',
-  'value removed':'onValueRemoved',
-  'node ready':'onNodeReady',
-  'notification':'onNotification',
-  'scan complete':'onScanComplete',
-  'controller command':'onControllerCommand'
+    'event': 'onEvent',
+    'driver ready': 'onDriverReady',
+    'driver failed': 'onDriverFailed',
+    'node added': 'onNodeAdded',
+    'value added': 'onValueAdded',
+    'value changed': 'onValueChanged',
+    'value removed': 'onValueRemoved',
+    'node ready': 'onNodeReady',
+    'notification': 'onNotification',
+    'scan complete': 'onScanComplete',
+    'controller command': 'onControllerCommand'
 };
 
 for (var z in zwaveEvents) {
-  zwave.on(z, zwaveHandler[zwaveEvents[z]]);
+    zwave.on(z, zwaveHandler[zwaveEvents[z]]);
 }
 
 process.removeAllListeners('SIGINT');
 
-process.on('SIGINT', function() {
-  console.log('disconnecting...');
-  zwave.disconnect(config.zwaveBus);
-  mqtt.end();
-  process.exit();
+process.on('SIGINT', function () {
+    console.log('disconnecting...');
+    zwave.disconnect(config.zwaveBus);
+    mqtt.end();
+    process.exit();
 });
 
 zwave.connect(config.zwaveBus);
