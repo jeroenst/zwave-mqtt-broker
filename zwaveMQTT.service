@@ -1,0 +1,13 @@
+[Unit]
+Description=zwave MQTT gateway
+After=network.target auditd.service
+WorkingDirectory=/opt/zwaveMQTT/zwaveMQTT.js
+
+[Service]
+ExecStart=/usr/bin/nodejs /opt/zwaveMQTT/zwaveMQTT.js
+KillMode=process
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+Alias=zwaveMQTT.service
