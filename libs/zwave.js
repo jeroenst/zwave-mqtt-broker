@@ -1,5 +1,10 @@
 'use strict';
-var constants = require('./constants');
+const constants = require('./constants');
+const config = require('../config.js');
+const lowerCase = require('lower-case');
+const str_replace = require('str_replace');
+var mqttdata;
+
 var mqtt;
 //todo: move to mongodb
 var nodes = [];
@@ -45,7 +50,7 @@ function onNodeAdded(id) {
 }
 
 function onEvent(id, value) {
-    _mqttPublish(_returnCommandClassString(32), id, _returnCommandClassString(32), value, 'Event')
+    _mqttPublish(_returnCommandClassString(32), id, value.instance, _returnCommandClassString(32), value, 'event')
 }
 
 function onValueAdded(id, comClass, value) {
@@ -54,7 +59,7 @@ function onValueAdded(id, comClass, value) {
     }
     nodes[id].classes[comClass][value.index] = value;
 
-    _mqttPublish(_returnCommandClassString(comClass), id, value.label, value.value, 'value added/changed');
+    _mqttPublish(_returnCommandClassString(comClass), id, value.instance, value.label, value.value, 'value');
 }
 
 function onValueChanged(id, comClass, value) {
@@ -138,18 +143,24 @@ function _disconnect() {
     process.exit();
 }
 
-function _mqttPublish(topic, id, label, value, action) {
+function _mqttPublish(topic, id, instance, label, value, action) {
     var message = JSON.stringify({
-        source: 'zwave[' + id + ']',
         label: label,
         value: value,
         action: action,
         timestamp: Date.now()
     });
 
-    mqtt.then(function (client) {
-        client.publish(topic, message);
-    });
+//    mqtt.then(function (client) {
+        var mqttTopic = config.mqtt.topicPrefix+str_replace(" ", "_", lowerCase(id+"/"+instance+"/"+topic+"/"+label+"/"+action));
+        var mqttValue =  ""+ value;
+        // Only publish when value has changed...
+//        if (mqttdata[mqttTopic] != mqttValue)
+//        {
+            mqtt.publish(mqttTopic, mqttValue, {retain: 1});
+//            mqttdata[mqttTopic] = mqttValue;
+//        }
+  //  });
 }
 
 function _returnCommandClassString(id) {

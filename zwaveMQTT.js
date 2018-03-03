@@ -2,7 +2,8 @@
 
 var openzwave = require('openzwave-shared');
 var config = require('./config');
-var mqtt = require('./libs/mqtt')(config);
+var mqtt = require('./libs/mqtt');
+mqtt.init(config);
 var zwaveHandler = require('./libs/zwave')(mqtt);
 var zwave = new openzwave(config.zwave);
 
@@ -33,4 +34,5 @@ process.on('SIGINT', function () {
     process.exit();
 });
 
+mqtt.setzwave(zwave);
 zwave.connect(config.zwaveBus);

@@ -5,7 +5,8 @@ config.debug = true;
 
 // MQTT Message Broker 
 config.mqtt = {
-    uri: 'mqtts://127.0.0.1:8883/',
+    uri: 'mqtt://127.0.0.1',
+    topicPrefix: 'home/zwave/',
     options: {
         //username: 'AnUser',
         //password: 'APassword',
@@ -22,10 +23,13 @@ config.zwave = {
     EnableSIS: true, //Automatically become a SUC if there is No SUC on the network
     ConsoleOutput: true, //Enable log output to stdout (or console)
     SaveConfiguration: true, //When Shutting Down, should the library automatically save the Network Configuration in zwcfg_.xml_
+    driverattempts: 3,        // try this many times before giving up 
+    pollinterval: 500,        // interval between polls in milliseconds 
+    suppressrefresh: true,    // do not send updates if nothing changed 
 }
 
 // for linux/mac
-config.zwaveBus = '/dev/cu.usbmodem1411';
+config.zwaveBus = '/dev/ttyACM0';
 
 // for windows
 // config.zwaveBus = '\\\\.\\COM3';
