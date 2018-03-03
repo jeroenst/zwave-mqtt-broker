@@ -16,7 +16,11 @@
     "bunyan": "^1.3.4",
     "mqtt": "^1.7.2",
     "openzwave-shared": "^1.1.7",
-    "q": "^1.4.1"
+    "q": "^1.4.1",
+    "foreach": "",
+    "string-split": "",
+    "lower-case": "",
+    "str_replace": ""  
   },
   "repository": {
     "type": "git",
