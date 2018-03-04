@@ -4,7 +4,7 @@ After=network.target auditd.service
 WorkingDirectory=/opt/zwaveMQTT/zwaveMQTT.js
 
 [Service]
-ExecStart=/usr/bin/nodejs /opt/zwaveMQTT/zwaveMQTT.js
+ExecStart=/opt/zwaveMQTT/zwaveMQTT.js
 KillMode=process
 Restart=on-failure
 
