@@ -35,20 +35,33 @@ module.exports = {
         var mqttsplit = split("/", topic.toString());
         
         // console.log(mqttsplit);
+        console.log("MQTT RECEIVED: "+topic+"="+message);
 
-        var commandclass = 0;        
+        var commandclass = 0;
+        if (isNaN(mqttsplit[5]))
+        {
         foreach(constants.commandClass, function (value, key, array) {
             if (lowerCase(value) == mqttsplit[5]) {
                 commandclass = key;
             }
          // console.log (lowerCase(value) + "==" +  mqttsplit[5]);
         });
+        }
+        else commandclass = parseInt(mqttsplit[5]);
+
+        if (commandclass == 0)
+        {
+            console.log("Commandclass not found, ignoring...");
+            return;
+        }
         
-        console.log("MQTT RECEIVED: NODEID:"+mqttsplit[3]+" INSTANCEID:"+mqttsplit[4]+" COMMANDCLASS="+commandclass+" VALUE="+message);
+        console.log("SENDING TO ZWAVE: NODEID:"+mqttsplit[3]+" INSTANCEID:"+mqttsplit[4]+" COMMANDCLASS="+commandclass+" INDEX="+mqttsplit[6]+" VALUE="+message);
+
 
         try
         {        
-            zwave.setValue(parseInt(mqttsplit[3]), commandclass, parseInt(mqttsplit[4]), 0, message);
+            if (isNaN(message)) zwave.setValue(parseInt(mqttsplit[3]), commandclass, parseInt(mqttsplit[4]), parseInt(mqttsplit[6]), message);
+            else zwave.setValue(parseInt(mqttsplit[3]), commandclass, parseInt(mqttsplit[4]), parseInt(mqttsplit[6]), parseInt(message));
         }
         catch(err) 
         {
@@ -76,6 +89,7 @@ module.exports = {
     
     publish: function (topic, message, options)
     {
+        console.log ("MQTT PUBLISHING: "+topic+"="+message);
         client.publish(topic, message, options);
     }
 } 

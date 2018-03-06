@@ -50,7 +50,7 @@ function onNodeAdded(id) {
 }
 
 function onEvent(id, value) {
-    _mqttPublish(_returnCommandClassString(32), id, value.instance, _returnCommandClassString(32), value, 'event')
+//    _mqttPublish(_returnCommandClassString(32), id, value.instance, _returnCommandClassString(32), value, 'event')
 }
 
 function onValueAdded(id, comClass, value) {
@@ -59,7 +59,7 @@ function onValueAdded(id, comClass, value) {
     }
     nodes[id].classes[comClass][value.index] = value;
 
-    _mqttPublish(_returnCommandClassString(comClass), id, value.instance, value.label, value.value, 'value');
+    _mqttPublish(_returnCommandClassString(comClass), id, value.instance, value.label, value.value);
 }
 
 function onValueChanged(id, comClass, value) {
@@ -71,6 +71,7 @@ function onValueRemoved(id, comClass, value) {
     if (nodes[id].classes[comClass] && nodes[id].classes[comClass][index]) {
         delete nodes[id].classes[comClass][index];
     }
+    _mqttPublish(_returnCommandClassString(comClass), id, value.instance, value.label, '');
 }
 
 function onNodeReady(id, info) {
@@ -143,16 +144,8 @@ function _disconnect() {
     process.exit();
 }
 
-function _mqttPublish(topic, id, instance, label, value, action) {
-    var message = JSON.stringify({
-        label: label,
-        value: value,
-        action: action,
-        timestamp: Date.now()
-    });
-
-//    mqtt.then(function (client) {
-        var mqttTopic = config.mqtt.topicPrefix+str_replace(" ", "_", lowerCase(id+"/"+instance+"/"+topic+"/"+label+"/"+action));
+function _mqttPublish(topic, id, instance, label, value) {
+        var mqttTopic = config.mqtt.topicPrefix+str_replace(" ", "_", lowerCase(id+"/"+instance+"/"+topic+"/"+label));
         var mqttValue =  ""+ value;
         // Only publish when value has changed...
 //        if (mqttdata[mqttTopic] != mqttValue)

@@ -51,7 +51,8 @@ var commandClass = {
     67: "thermostatSetpoint",
     99: "userCode",
     134: "version",
-    132: "wakeUp"
+    132: "wakeUp",
+    0x33: "color" 
 };
 
 module.exports = {
